@@ -189,7 +189,7 @@ Your {{vehicle_info}} ({{license_plate}}) is due for maintenance:
 
 Book your appointment now with MechLink to keep your vehicle in top condition!
 
-Find workshops: https://mechlink.com/talleres""",
+Find workshops: https://mechlink.com/workshops""",
             "html_template": """
 <html>
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
@@ -210,7 +210,7 @@ Find workshops: https://mechlink.com/talleres""",
             </div>
             
             <div style="text-align: center; margin-top: 25px;">
-                <a href="https://mechlink.com/talleres" style="display: inline-block; background: #dc2626; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">🔍 Find Workshops</a>
+                <a href="https://mechlink.com/workshops" style="display: inline-block; background: #dc2626; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">🔍 Find Workshops</a>
             </div>
             
             <p style="text-align: center; margin-top: 20px; color: #6b7280;">Keep your vehicle in top condition!</p>

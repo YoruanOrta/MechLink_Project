@@ -16,7 +16,7 @@ from app.schemas.workshop_schemas import (
 )
 from app.api.deps import get_current_user
 
-router = APIRouter(prefix="/workshops", tags=["talleres"])
+router = APIRouter(prefix="/workshops", tags=["workshops"])
 
 # === OPTIMIZED SCHEMAS FOR MAPS ===
 
