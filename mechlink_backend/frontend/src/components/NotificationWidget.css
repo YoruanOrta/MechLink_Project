@@ -1,0 +1,67 @@
+.notification-widget {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 2000;
+}
+
+.bell-btn {
+  background: transparent;
+  border: none;
+  position: relative;
+  cursor: pointer;
+}
+
+.bell-icon {
+  width: 32px;
+  height: 32px;
+  color: #facc15; /* amarillo */
+}
+
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 4px 6px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.dropdown {
+  position: absolute;
+  right: 0;
+  margin-top: 12px;
+  width: 320px;
+  background-color: #1f2937;
+  color: white;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  padding: 20px;
+  z-index: 9999;
+}
+
+.dropdown h4 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #374151;
+  padding-bottom: 8px;
+}
+
+.dropdown ul {
+  list-style: none;
+  padding: 0;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.dropdown li {
+  margin-bottom: 12px;
+}
+
+.no-notifications {
+  font-style: italic;
+  color: #9ca3af;
+}

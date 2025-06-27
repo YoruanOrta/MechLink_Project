@@ -1,0 +1,40 @@
+.vehicle-form-container {
+  max-width: 600px;
+  margin: auto;
+  padding: 25px;
+  background: #F3F4F6; 
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.vehicle-form input,
+.vehicle-form textarea {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #6B7280; 
+}
+
+.vehicle-form button {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #FBBF24; 
+  color: #1F2937; 
+  border: none;
+  border-radius: 5px;
+  width: 100%;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.vehicle-form button:hover {
+  background-color: #f59e0b; 
+}
+
+.message {
+  margin-top: 10px;
+  text-align: center;
+  color: #1F2937; 
+  font-weight: 500;
+}

@@ -1,0 +1,130 @@
+import React, { useState, useEffect } from "react";
+import "./BookAppointment.css";
+
+function BookAppointment() {
+  const token = localStorage.getItem("access_token"); // Asegúrate que el nombre coincide
+  const [workshops, setWorkshops] = useState([]);
+  const [vehicles, setVehicles] = useState([]);
+  const [formData, setFormData] = useState({
+    workshop_id: "",
+    vehicle_id: "",
+    appointment_date: "",
+    appointment_time: "",
+    notes: "",
+  });
+  const [message, setMessage] = useState("");
+
+  // ✅ Fetch user's vehicles
+  useEffect(() => {
+    fetch("http://localhost:8000/api/v1/vehicles/my-vehicles", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setVehicles(data);
+        } else {
+          console.error("Unexpected vehicles data:", data);
+          setVehicles([]);
+          setMessage("Failed to load vehicles (invalid response).");
+        }
+      })
+      .catch(() => setMessage("Failed to load vehicles."));
+  }, [token]);
+
+  // ✅ Fetch workshops
+  useEffect(() => {
+    fetch("http://localhost:8000/api/v1/workshops", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setWorkshops(data);
+        } else {
+          console.error("Unexpected workshops data:", data);
+          setWorkshops([]);
+          setMessage("Failed to load workshops (invalid response).");
+        }
+      })
+      .catch(() => setMessage("Failed to load workshops."));
+  }, [token]);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMessage("");
+
+    const { appointment_date, appointment_time, ...rest } = formData;
+    const appointment_datetime = `${appointment_date}T${appointment_time}`;
+
+    try {
+      const response = await fetch("http://localhost:8000/api/v1/appointments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ ...rest, appointment_datetime }),
+      });
+
+      if (response.ok) {
+        setMessage("Appointment booked successfully 📅");
+      } else {
+        const errorData = await response.json();
+        setMessage(errorData.detail || "Error booking appointment.");
+      }
+    } catch {
+      setMessage("Network error.");
+    }
+  };
+
+  return (
+    <div className="appointment-form-container">
+      <h2>Book Appointment</h2>
+      <form className="appointment-form" onSubmit={handleSubmit}>
+        <label>
+          Select Workshop:
+          <select name="workshop_id" required onChange={handleChange}>
+            <option value="">-- Choose a workshop --</option>
+            {Array.isArray(workshops) &&
+              workshops.map((w) => (
+                <option key={w.id} value={w.id}>
+                  {w.name} - {w.city}
+                </option>
+              ))}
+          </select>
+        </label>
+
+        <label>
+          Select Vehicle:
+          <select name="vehicle_id" required onChange={handleChange}>
+            <option value="">-- Choose a vehicle --</option>
+            {Array.isArray(vehicles) &&
+              vehicles.map((v) => (
+                <option key={v.id} value={v.id}>
+                  {v.make} {v.model} ({v.year})
+                </option>
+              ))}
+          </select>
+        </label>
+
+        <input type="date" name="appointment_date" required onChange={handleChange} />
+        <input type="time" name="appointment_time" required onChange={handleChange} />
+        <textarea name="notes" placeholder="Additional notes" onChange={handleChange}></textarea>
+
+        <button type="submit">Book Appointment</button>
+      </form>
+      {message && <p className="message">{message}</p>}
+    </div>
+  );
+}
+
+export default BookAppointment;
