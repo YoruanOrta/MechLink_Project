@@ -1,21 +1,23 @@
 .appointment-form-container {
   max-width: 600px;
   margin: auto;
-  background: #f9f9f9;
+  background: #F3F4F6; 
   padding: 25px;
   border-radius: 8px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
 }
 
 .appointment-form h2 {
   text-align: center;
   margin-bottom: 20px;
+  color: #1F2937; 
 }
 
 .appointment-form label {
   display: block;
   margin-top: 15px;
   font-weight: bold;
+  color: #6B7280; 
 }
 
 .appointment-form select,
@@ -24,27 +26,32 @@
   width: 100%;
   margin-top: 8px;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #6B7280; 
   border-radius: 5px;
+  background-color: #FFFFFF; 
+  color: #1F2937;
 }
 
 .appointment-form button {
   margin-top: 20px;
   padding: 12px;
   width: 100%;
-  background-color: #0077cc;
+  background-color: #E63946; 
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
 }
 
 .appointment-form button:hover {
-  background-color: #005fa3;
+  background-color: #c12738; 
 }
 
 .message {
   margin-top: 15px;
   text-align: center;
+  color: #1F2937;
 }

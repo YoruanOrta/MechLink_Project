@@ -28,7 +28,7 @@ function MyAppointments() {
 
   useEffect(() => {
     fetchAppointments();
-  }, [token]);
+  }, []);
 
   const handleCancel = async (id) => {
     const confirmCancel = window.confirm("Are you sure you want to cancel this appointment?");

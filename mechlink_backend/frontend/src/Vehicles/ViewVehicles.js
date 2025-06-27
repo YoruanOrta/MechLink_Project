@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./ViewVehicles.css";
+import "../styles/ViewVehicles.css";
 
 function ViewVehicles() {
   const [vehicles, setVehicles] = useState([]);

@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./BookAppointment.css";
 
 function BookAppointment() {
-  const token = localStorage.getItem("token");
-  const userId = localStorage.getItem("user_id");
-
+  const token = localStorage.getItem("access_token"); // Asegúrate que el nombre coincide
   const [workshops, setWorkshops] = useState([]);
   const [vehicles, setVehicles] = useState([]);
   const [formData, setFormData] = useState({
@@ -16,23 +14,43 @@ function BookAppointment() {
   });
   const [message, setMessage] = useState("");
 
-  // Fetch user's vehicles
+  // ✅ Fetch user's vehicles
   useEffect(() => {
     fetch("http://localhost:8000/api/v1/vehicles/my-vehicles", {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then((res) => res.json())
-      .then((data) => setVehicles(data))
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setVehicles(data);
+        } else {
+          console.error("Unexpected vehicles data:", data);
+          setVehicles([]);
+          setMessage("Failed to load vehicles (invalid response).");
+        }
+      })
       .catch(() => setMessage("Failed to load vehicles."));
   }, [token]);
 
-  // Fetch available workshops
+  // ✅ Fetch workshops
   useEffect(() => {
     fetch("http://localhost:8000/api/v1/workshops", {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then((res) => res.json())
-      .then((data) => setWorkshops(data))
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setWorkshops(data);
+        } else {
+          console.error("Unexpected workshops data:", data);
+          setWorkshops([]);
+          setMessage("Failed to load workshops (invalid response).");
+        }
+      })
       .catch(() => setMessage("Failed to load workshops."));
   }, [token]);
 
@@ -44,6 +62,9 @@ function BookAppointment() {
     e.preventDefault();
     setMessage("");
 
+    const { appointment_date, appointment_time, ...rest } = formData;
+    const appointment_datetime = `${appointment_date}T${appointment_time}`;
+
     try {
       const response = await fetch("http://localhost:8000/api/v1/appointments", {
         method: "POST",
@@ -51,7 +72,7 @@ function BookAppointment() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...rest, appointment_datetime }),
       });
 
       if (response.ok) {
@@ -73,11 +94,12 @@ function BookAppointment() {
           Select Workshop:
           <select name="workshop_id" required onChange={handleChange}>
             <option value="">-- Choose a workshop --</option>
-            {workshops.map((w) => (
-              <option key={w.id} value={w.id}>
-                {w.name} - {w.city}
-              </option>
-            ))}
+            {Array.isArray(workshops) &&
+              workshops.map((w) => (
+                <option key={w.id} value={w.id}>
+                  {w.name} - {w.city}
+                </option>
+              ))}
           </select>
         </label>
 
@@ -85,11 +107,12 @@ function BookAppointment() {
           Select Vehicle:
           <select name="vehicle_id" required onChange={handleChange}>
             <option value="">-- Choose a vehicle --</option>
-            {vehicles.map((v) => (
-              <option key={v.id} value={v.id}>
-                {v.make} {v.model} ({v.year})
-              </option>
-            ))}
+            {Array.isArray(vehicles) &&
+              vehicles.map((v) => (
+                <option key={v.id} value={v.id}>
+                  {v.make} {v.model} ({v.year})
+                </option>
+              ))}
           </select>
         </label>
 

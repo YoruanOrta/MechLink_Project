@@ -1,0 +1,27 @@
+.maintenance-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #f3f4f6;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.maintenance-list {
+  list-style: none;
+  padding: 0;
+}
+
+.maintenance-card {
+  background: white;
+  padding: 15px;
+  border-left: 5px solid #e63946;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+}
+
+.error {
+  color: red;
+  text-align: center;
+}

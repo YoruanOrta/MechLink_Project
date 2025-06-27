@@ -2,7 +2,7 @@
   max-width: 700px;
   margin: 40px auto;
   padding: 20px;
-  background: #eef2f5;
+  background: #F3F4F6; 
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
@@ -13,10 +13,11 @@
 }
 
 .vehicle-card {
-  background: white;
+  background: #FFFFFF; 
   padding: 15px;
   margin-top: 10px;
-  border-left: 5px solid #0077cc;
+  border-left: 5px solid #E63946; 
   border-radius: 5px;
   box-shadow: 0 0 5px rgba(0,0,0,0.05);
 }
+
