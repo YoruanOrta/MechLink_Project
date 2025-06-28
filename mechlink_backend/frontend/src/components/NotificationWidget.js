@@ -5,7 +5,7 @@ import "./NotificationWidget.css";
 function NotificationWidget() {
   const [notifications, setNotifications] = useState([]);
   const [open, setOpen] = useState(false);
-  const token = localStorage.getItem("access_token");
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     fetch("http://localhost:8000/api/v1/notifications?unread_only=true", {

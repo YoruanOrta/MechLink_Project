@@ -43,7 +43,7 @@ function Dashboard() {
   const fetchVehicles = async () => {
     setVehiclesLoading(true);
     try {
-      const response = await fetch("http://localhost:8000/api/v1/vehicles/my-vehicles", {
+      const response = await fetch("http://localhost:8000/api/v1/vehicles/", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

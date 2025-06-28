@@ -4,7 +4,7 @@ function NotificationsPage() {
   const [notifications, setNotifications] = useState([]);
   const [error, setError] = useState("");
 
-  const token = localStorage.getItem("access_token");
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     fetch("http://localhost:8000/api/v1/notifications", {

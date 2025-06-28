@@ -4,7 +4,7 @@ import "../styles/MaintenanceLogs.css";
 function MaintenanceLogs() {
   const [records, setRecords] = useState([]);
   const [error, setError] = useState("");
-  const token = localStorage.getItem("access_token");
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     fetch("http://localhost:8000/api/v1/maintenance/records", {

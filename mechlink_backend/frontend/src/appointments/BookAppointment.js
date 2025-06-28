@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./BookAppointment.css";
 
 function BookAppointment() {
-  const token = localStorage.getItem("access_token"); // Asegúrate que el nombre coincide
+  const token = localStorage.getItem("token");
   const [workshops, setWorkshops] = useState([]);
   const [vehicles, setVehicles] = useState([]);
   const [formData, setFormData] = useState({
