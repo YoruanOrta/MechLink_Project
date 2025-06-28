@@ -1,5 +1,4 @@
-/* src/styles/Dashboard.css */
-
+/* === YOUR ORIGINAL CSS (KEEP EVERYTHING THE SAME) === */
 .dashboard-container {
   display: flex;
   height: 100vh;
@@ -9,40 +8,186 @@
 }
 
 .sidebar {
-  width: 250px;
+  width: 280px; /* Slightly wider for bigger buttons */
   background-color: #374151;
-  padding: 30px 20px;
+  padding: 30px 15px 30px 10px; /* Less left padding to move buttons left */
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 25px; /* More space between buttons */
 }
 
 .sidebar-logo {
-  font-size: 22px;
+  font-size: 40px; /* For text, but we'll override for images */
   font-weight: bold;
   margin-bottom: 30px;
-  color: #facc15;
+  color: #ffaa00; /* Yellow color */
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)); /* Add shadow for depth */
+}
+
+/* Style for SVG/image logos */
+.sidebar-logo img,
+.sidebar-logo svg {
+  width: 75px; /* Make SVG bigger */
+  height: 75px; /* Make SVG bigger */
+  filter: brightness(0) saturate(80%) invert(67%) sepia(78%) saturate(901%) hue-rotate(345deg) brightness(98%) contrast(101%);
+}
+
+/* Gear rotation animation on hover */
+.sidebar-logo:hover {
+  transform: rotate(15deg) scale(1.15); /* Slightly bigger scale on hover */
+}
+
+.sidebar-logo:hover img,
+.sidebar-logo:hover svg {
+  filter: brightness(0) saturate(100%) invert(77%) sepia(98%) saturate(1101%) hue-rotate(318deg) brightness(110%) contrast(101%);
 }
 
 .sidebar ul {
   list-style: none;
-  padding: 0;
+  padding: 1px 15px;
+  margin-top: -10px;
 }
 
+/* === ENHANCED FLOATING SIDEBAR BUTTONS === */
 .sidebar li {
-  margin-bottom: 18px;
-  font-size: 16px;
+  margin-bottom: 20px; /* More space between buttons */
+  margin-left: -15px; /* Remove any left margin */
+  font-size: 18px; /* Bigger text */
+  font-weight: 600;
   cursor: pointer;
-  transition: color 0.3s;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  
+  /* BIGGER BUTTONS - NO CONSTANT ANIMATION */
+  padding: 20px 25px 20px 15px; /* Less left padding to move content left */
+  border-radius: 16px; /* More rounded corners */
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25); /* Stronger shadow */
+  position: relative;
+  overflow: hidden;
+  transform-origin: center;
+  width: 100%; /* Full width buttons */
+  min-height: 60px; /* Minimum height for bigger buttons */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  /* NO animation here - only on hover */
 }
 
+/* Different colors for each button */
+.sidebar li:nth-child(1) {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8); /* Blue */
+}
+
+.sidebar li:nth-child(2) {
+  background: linear-gradient(135deg, #10b981, #059669); /* Green */
+}
+
+.sidebar li:nth-child(3) {
+  background: linear-gradient(135deg, #ef4444, #dc2626); /* Red */
+}
+
+.sidebar li:nth-child(4) {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed); /* Purple */
+}
+
+.sidebar li:nth-child(5) {
+  background: linear-gradient(135deg, #f59e0b, #d97706); /* Orange */
+}
+
+/* === ENHANCED HOVER EFFECTS - ONLY ON HOVER === */
 .sidebar li:hover {
-  color: #facc15;
+  color: white;
+  transform: translateY(-8px) translateX(6px) scale(1.08) rotate(1deg); /* Dramatic movement only on hover */
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4); /* Much stronger shadow */
+  animation: hover-float 0.6s ease-out; /* Quick float animation on hover */
 }
 
+/* Stronger ripple effect on click */
+.sidebar li::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4); /* ← More visible ripple */
+  transition: width 0.8s ease-out, height 0.8s ease-out;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+
+.sidebar li:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Glowing border effect on hover */
+.sidebar li::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 16px;
+  border: 2px solid transparent;
+  background: linear-gradient(45deg, rgba(255,255,255,0.1), transparent, rgba(255,255,255,0.1));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.sidebar li:hover::after {
+  opacity: 1;
+}
+
+/* Keep text visible above effects */
+.sidebar li * {
+  position: relative;
+  z-index: 2;
+  text-decoration: none; /* Remove underline from links */
+  color: inherit; /* Keep the white color */
+}
+
+/* === HOVER-ONLY FLOATING ANIMATION === */
+@keyframes hover-float {
+  0% {
+    transform: translateY(0px) translateX(0px) scale(1) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-4px) translateX(3px) scale(1.04) rotate(0.5deg);
+  }
+  100% {
+    transform: translateY(-8px) translateX(6px) scale(1.08) rotate(1deg);
+  }
+}
+
+/* === PULSE ANIMATION FOR ACTIVE STATE === */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+  }
+  50% {
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+  }
+}
+
+/* Active button gets pulse effect */
+.sidebar li.active {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* === KEEP ALL OTHER STYLES THE SAME === */
 .main-content {
   flex: 1;
-  padding: 30px 40px;
+  padding: 30px 50px;
   background-color: #1f2937;
   display: flex;
   flex-direction: column;
@@ -205,7 +350,7 @@
 }
 
 .search-bar-box {
-  background-color: #dc2626; /* rojo */
+  background-color: #dc2626;
   padding: 20px 30px;
   border-radius: 12px;
   margin-bottom: 30px;
@@ -246,7 +391,7 @@
 }
 
 .search-button {
-  background-color: #facc15; /* amarillo */
+  background-color: #facc15;
   color: #1e293b;
   padding: 12px 24px;
   border: none;
@@ -294,4 +439,3 @@
 .btn-yellow {
   background-color: #fbc02d;
 }
-

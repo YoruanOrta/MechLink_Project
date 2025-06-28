@@ -43,7 +43,7 @@ function Dashboard() {
   const fetchVehicles = async () => {
     setVehiclesLoading(true);
     try {
-      const response = await fetch("http://localhost:8000/api/v1/vehicles/", {
+      const response = await fetch("http://localhost:8000/api/v1/vehicles/my-vehicles", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -86,14 +86,16 @@ function Dashboard() {
   return (
     <div className="dashboard-container">
       <aside className="sidebar">
-        <h2 className="sidebar-logo">🔧 MechLink</h2>
+        <h2 className="sidebar-logo">
+          <img src="/images/gear.svg" alt="MechLink Logo" style={{width: '90px', height: '90px'}} />
+        </h2>
         <ul>
-          <li className="sidebar-button btn-blue">
+          <li className="sidebar-button btn-blue pulse">
             <Link to="/search" className="sidebar-link">
               🔍 Search Mechanics
             </Link>
           </li>
-          <li className="sidebar-button btn-yellow"><Link to="/my-services" className="sidebar-link">
+          <li className="sidebar-button btn-green"><Link to="/my-services" className="sidebar-link">
       🛠️ My Services
     </Link></li>
           <li onClick={() => navigate("/appointments/book")} className="sidebar-button btn-red">⚡ Easy Appointments</li>
