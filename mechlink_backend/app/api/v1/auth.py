@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from datetime import timedelta
+from datetime import timedelta, datetime
 from app.config.database import get_db
 from app.config.settings import settings
 from app.models.user import User
@@ -9,11 +9,15 @@ from app.schemas.user_schemas import UserCreate, UserResponse, Token, UserLogin
 from app.utils.security import hash_password, verify_password, create_access_token
 from app.api.deps import get_current_user
 
-router = APIRouter(prefix="/auth", tags=["authentication"])
+# ✅ ADD: Imports for notifications
+from app.models.notification import NotificationType, NotificationChannel  
+from app.services.notification_service import NotificationService
+
+router = APIRouter(prefix="/auth", tags=["autenticación"])
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 def register(user_data: UserCreate, db: Session = Depends(get_db)):
-    """Register a new user"""
+    """Registrar nuevo usuario"""
     
     # Check if the email already exists
     existing_user = db.query(User).filter(User.email == user_data.email).first()
@@ -23,7 +27,7 @@ def register(user_data: UserCreate, db: Session = Depends(get_db)):
             detail="Email already registered"
         )
     
-    # Create a new user
+    # Create new user
     hashed_password = hash_password(user_data.password)
     db_user = User(
         email=user_data.email,
@@ -41,7 +45,7 @@ def register(user_data: UserCreate, db: Session = Depends(get_db)):
 
 @router.post("/login", response_model=Token)
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    """User login - returns JWT token"""
+    """Login de usuario - devuelve token JWT"""
     
     # Search for user by email
     user = db.query(User).filter(User.email == form_data.username).first()
@@ -77,10 +81,8 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 def login_json(user_credentials: UserLogin, db: Session = Depends(get_db)):
     """Alternative login using JSON instead of form-data"""
     
-    # Search for user by email
     user = db.query(User).filter(User.email == user_credentials.email).first()
     
-    # Verify user and password
     if not user or not verify_password(user_credentials.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -93,12 +95,31 @@ def login_json(user_credentials: UserLogin, db: Session = Depends(get_db)):
             detail="Inactive user"
         )
     
-    # Create access token
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user.email}, 
         expires_delta=access_token_expires
     )
+    
+    # ✅ ADD: Welcome notification
+    try:
+        notification_service = NotificationService(db)
+        notification_service.create_notification(
+            user_id=user.id,
+            notification_type=NotificationType.SYSTEM_UPDATE,
+            channel=NotificationChannel.in_app,
+            title=f"Welcome back to MechLink, {user.first_name}! 🚗",
+            message=f"Hi {user.first_name}! Welcome back to MechLink. Keep your vehicle maintenance on track with our easy appointment system.",
+            data={
+                "login_time": datetime.now().isoformat(),
+                "user_name": f"{user.first_name} {user.last_name}",
+                "login_type": "success"
+            }
+        )
+        print(f"✅ Welcome notification created for user {user.first_name}")
+    except Exception as e:
+        # Do not fail login if there is an error in notification
+        print(f"❌ Error sending welcome notification: {e}")
     
     return {
         "access_token": access_token,
@@ -121,7 +142,7 @@ def logout(current_user: User = Depends(get_current_user)):
 
 @router.post("/refresh", response_model=Token)
 def refresh_token(current_user: User = Depends(get_current_user)):
-    """Renew JWT token"""
+    """Renovar token JWT"""
     
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
