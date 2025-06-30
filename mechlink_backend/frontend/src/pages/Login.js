@@ -26,7 +26,8 @@ function Login() {
       if (response.ok) {
         localStorage.setItem("access_token", data.access_token);
         localStorage.setItem("user_email", data.user.email);
-        localStorage.setItem("user_role", data.user.role || "user"); // si tienes roles
+        localStorage.setItem("user_role", data.user.role || "user");
+        localStorage.setItem("user_id", data.user.id);
         navigate("/dashboard");
       } else {
         setError(data.detail || "Login failed");

@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/RegisterVehicle.css";
+import tokenManager from '../utils/tokenManager';
+
 
 function RegisterVehicle() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  const user_id = localStorage.getItem("user_id");
+  const user_id = "ede51667-a6a0-48ac-be6d-869b1fbc9513";
 
   const [formData, setFormData] = useState({
     make: "",
@@ -13,12 +15,9 @@ function RegisterVehicle() {
     year: "",
     license_plate: "",
     color: "",
-    current_mileage: "",
-    fuel_type: "",
+    mileage: "",
     transmission: "",
     engine_size: "",
-    vin: "",
-    image: "",
     notes: "",
     user_id: user_id,
   });
@@ -32,20 +31,14 @@ function RegisterVehicle() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
-
+  
     try {
-      const response = await fetch("http://localhost:8000/api/v1/vehicles/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(formData),
-      });
-
+      // ✅ USAR tokenManager en lugar de fetch
+      const response = await tokenManager.post("http://localhost:8000/api/v1/vehicles/", formData);
+  
       if (response.ok) {
         setMessage("Vehicle registered successfully 🚗");
-        navigate("/vehicles");
+        navigate("/dashboard");
       } else {
         const data = await response.json();
         setMessage(data.detail || "Error registering vehicle");
@@ -64,12 +57,9 @@ function RegisterVehicle() {
         <input type="number" name="year" placeholder="Year*" required onChange={handleChange} />
         <input type="text" name="license_plate" placeholder="License Plate*" required onChange={handleChange} />
         <input type="text" name="color" placeholder="Color" onChange={handleChange} />
-        <input type="number" name="current_mileage" placeholder="Mileage" onChange={handleChange} />
-        <input type="text" name="fuel_type" placeholder="Fuel Type" onChange={handleChange} />
+        <input type="number" name="mileage" placeholder="Mileage" onChange={handleChange} />
         <input type="text" name="transmission" placeholder="Transmission" onChange={handleChange} />
         <input type="text" name="engine_size" placeholder="Engine Size" onChange={handleChange} />
-        <input type="text" name="vin" placeholder="VIN (17 characters)" onChange={handleChange} />
-        <input type="text" name="image" placeholder="Image URL" onChange={handleChange} />
         <textarea name="notes" placeholder="Additional Notes" onChange={handleChange}></textarea>
 
         <button type="submit">Register</button>

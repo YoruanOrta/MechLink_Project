@@ -214,11 +214,11 @@ function NewLandingPage() {
           <div className="team-grid">
             <div className="team-member">
               <div className="member-photo">
-                <img src="/images/user1.jpg" alt="Backend Developer" />
+                <img src="/images/PHOTO_Yoruan.jpg" alt="Backend Developer" />
               </div>
               <div className="member-info">
                 <h3>🔧 Backend Developer</h3>
-                <h4>[Your Name]</h4>
+                <h4>Yoruan Orta</h4>
                 <p>"Built the powerful API that makes everything work"</p>
                 <div className="tech-stack">
                   <span className="tech-tag">🚀 FastAPI + Python</span>
@@ -235,16 +235,16 @@ function NewLandingPage() {
             
             <div className="team-member">
               <div className="member-photo">
-                <img src="/images/user2.jpg" alt="Frontend Developer" />
+                <img src="/images/PHOTO_Emanuel.jpg" alt="Frontend Developer" />
               </div>
               <div className="member-info">
                 <h3>🎨 Frontend Developer</h3>
-                <h4>[Friend's Name]</h4>
+                <h4>Emanuel Mendoza</h4>
                 <p>"Created the beautiful user experience"</p>
                 <div className="tech-stack">
                   <span className="tech-tag">⚛️ React + JS</span>
                   <span className="tech-tag">🎨 UI/UX Design</span>
-                  <span className="tech-tag">📱 Mobile First</span>
+                  <span className="tech-tag">📚 HTML + CSS</span>
                   <span className="tech-tag">🗺️ Map Integration</span>
                 </div>
                 <div className="social-links">
@@ -365,7 +365,7 @@ function NewLandingPage() {
         .premium-landing {
           font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
           color: #1f2937;
-          line-height: 1.6;
+          line-height: 3.6;
         }
 
         /* Navigation */
@@ -410,7 +410,8 @@ function NewLandingPage() {
         .nav-links a {
           color: #e2e8f0;
           text-decoration: none;
-          font-weight: 500;
+          font-weight: 1000;
+          font-size: 1.3rem;
           transition: color 0.3s ease;
         }
 
@@ -721,7 +722,7 @@ function NewLandingPage() {
 
         .member-photo img {
           width: 100%;
-          height: 100%;
+          height: 123%;
           object-fit: cover;
         }
 

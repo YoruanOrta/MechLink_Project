@@ -12,6 +12,7 @@ import NotificationsPage from "./pages/NotificationsPage";
 import "./styles/App.css";
 import SearchMechanics from './pages/SearchMechanics';
 import MyServices from "./pages/MyServices";
+import Favorites from './pages/Favorites';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route path="/notifications" element={<NotificationsPage />} />
         <Route path="/search" element={<SearchMechanics />} />
         <Route path="/my-services" element={<MyServices />} />
+        <Route path="/favorites" element={<Favorites />} />
       </Routes>
     </Router>
   );

@@ -26,11 +26,36 @@ function Register() {
           phone,
         }),
       });
-
+  
+      const data = await response.json(); // ← Parse response data
+  
       if (response.ok) {
-        navigate("/"); // Go to login page after registration
+        // ✅ FIX: Login automatically after registration
+        const loginResponse = await fetch("http://localhost:8000/api/v1/auth/login-json", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        });
+  
+        const loginData = await loginResponse.json();
+  
+        if (loginResponse.ok) {
+          // Save token and redirect to dashboard
+          localStorage.setItem("token", loginData.access_token);
+          localStorage.setItem("user_email", loginData.user.email);
+          localStorage.setItem("user_role", loginData.user.role || "user");
+          navigate("/dashboard"); // ← Go directly to dashboard
+        } else {
+          // If auto-login fails, go to login page
+          alert("Account created! Please login.");
+          navigate("/login");
+        }
       } else {
-        const data = await response.json();
         alert(data.detail || "Registration failed");
       }
     } catch (error) {

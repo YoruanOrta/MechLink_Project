@@ -250,7 +250,6 @@ def debug_appointments(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """Endpoint temporal para debug"""
     try:
         # Verify user
         user_info = {
