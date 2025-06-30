@@ -13,5 +13,12 @@ class Settings(BaseSettings):
     APP_NAME: str = "MechLink API"
     VERSION: str = "1.0.0"
     DEBUG: bool = True
+    
+    EMAIL_HOST: str = "smtp.gmail.com"
+    EMAIL_PORT: int = 587
+    EMAIL_HOST_USER: str = "nauroy71106@gmail.com"  # Change email
+    EMAIL_HOST_PASSWORD: str = "fqul mink zxep segl"  # App password of Gmail
+    EMAIL_USE_TLS: bool = True
+    EMAIL_FROM: str = "MechLink <tu-email@gmail.com>"
 
 settings = Settings()

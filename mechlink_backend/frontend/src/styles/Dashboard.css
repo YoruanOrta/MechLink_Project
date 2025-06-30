@@ -1,0 +1,485 @@
+/* === YOUR ORIGINAL CSS (KEEP EVERYTHING THE SAME) === */
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+  background-color: #111827;
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.sidebar {
+  width: 280px; /* Slightly wider for bigger buttons */
+  background-color: #374151;
+  padding: 30px 15px 30px 10px; /* Less left padding to move buttons left */
+  display: flex;
+  flex-direction: column;
+  gap: 25px; /* More space between buttons */
+}
+
+.sidebar-logo {
+  font-size: 40px; /* For text, but we'll override for images */
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #ffaa00; /* Yellow color */
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)); /* Add shadow for depth */
+}
+
+/* Style for SVG/image logos */
+.sidebar-logo img,
+.sidebar-logo svg {
+  width: 75px; /* Make SVG bigger */
+  height: 75px; /* Make SVG bigger */
+  filter: brightness(0) saturate(80%) invert(67%) sepia(78%) saturate(901%) hue-rotate(345deg) brightness(98%) contrast(101%);
+}
+
+/* Gear rotation animation on hover */
+.sidebar-logo:hover {
+  transform: rotate(15deg) scale(1.15); /* Slightly bigger scale on hover */
+}
+
+.sidebar-logo:hover img,
+.sidebar-logo:hover svg {
+  filter: brightness(0) saturate(100%) invert(77%) sepia(98%) saturate(1101%) hue-rotate(318deg) brightness(110%) contrast(101%);
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 1px 15px;
+  margin-top: -10px;
+}
+
+/* === ENHANCED FLOATING SIDEBAR BUTTONS === */
+.sidebar li {
+  margin-bottom: 20px; /* More space between buttons */
+  margin-left: -15px; /* Remove any left margin */
+  font-size: 18px; /* Bigger text */
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  
+  /* BIGGER BUTTONS - NO CONSTANT ANIMATION */
+  padding: 20px 25px 20px 15px; /* Less left padding to move content left */
+  border-radius: 16px; /* More rounded corners */
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25); /* Stronger shadow */
+  position: relative;
+  overflow: hidden;
+  transform-origin: center;
+  width: 100%; /* Full width buttons */
+  min-height: 60px; /* Minimum height for bigger buttons */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  /* NO animation here - only on hover */
+}
+
+/* Different colors for each button */
+.sidebar li:nth-child(1) {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8); /* Blue */
+}
+
+.sidebar li:nth-child(2) {
+  background: linear-gradient(135deg, #10b981, #059669); /* Green */
+}
+
+.sidebar li:nth-child(3) {
+  background: linear-gradient(135deg, #ef4444, #dc2626); /* Red */
+}
+
+.sidebar li:nth-child(4) {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed); /* Purple */
+}
+
+.sidebar li:nth-child(5) {
+  background: linear-gradient(135deg, #f59e0b, #d97706); /* Orange */
+}
+
+/* === ENHANCED HOVER EFFECTS - ONLY ON HOVER === */
+.sidebar li:hover {
+  color: white;
+  transform: translateY(-8px) translateX(6px) scale(1.08) rotate(1deg); /* Dramatic movement only on hover */
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4); /* Much stronger shadow */
+  animation: hover-float 0.6s ease-out; /* Quick float animation on hover */
+}
+
+/* Stronger ripple effect on click */
+.sidebar li::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4); /* ← More visible ripple */
+  transition: width 0.8s ease-out, height 0.8s ease-out;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+
+.sidebar li:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Glowing border effect on hover */
+.sidebar li::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 16px;
+  border: 2px solid transparent;
+  background: linear-gradient(45deg, rgba(255,255,255,0.1), transparent, rgba(255,255,255,0.1));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.sidebar li:hover::after {
+  opacity: 1;
+}
+
+/* Keep text visible above effects */
+.sidebar li * {
+  position: relative;
+  z-index: 2;
+  text-decoration: none; /* Remove underline from links */
+  color: inherit;
+}
+
+/* === HOVER-ONLY FLOATING ANIMATION === */
+@keyframes hover-float {
+  0% {
+    transform: translateY(0px) translateX(0px) scale(1) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-4px) translateX(3px) scale(1.04) rotate(0.5deg);
+  }
+  100% {
+    transform: translateY(-8px) translateX(6px) scale(1.08) rotate(1deg);
+  }
+}
+
+/* === PULSE ANIMATION FOR ACTIVE STATE === */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+  }
+  50% {
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+  }
+}
+
+/* Active button gets pulse effect */
+.sidebar li.active {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* === KEEP ALL OTHER STYLES THE SAME === */
+.main-content {
+  flex: 1;
+  padding: 30px 50px;
+  background-color: #33353e;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 20px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: #dc2626;
+  padding: 8px 16px;
+  border-radius: 8px;
+  width: 500px;
+}
+
+.search-input {
+  border: none;
+  outline: none;
+  padding: 8px;
+  margin-left: 10px;
+  width: 100%;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.search-icon {
+  color: white;
+}
+
+.dashboard-body {
+  display: flex;
+  gap: 40px;
+}
+
+.available-mechanics {
+  flex: 1;
+}
+
+.active-services {
+  flex: 0.8;
+}
+
+.available-mechanics h2,
+.active-services h2 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #60a5fa;
+}
+
+.mechanic-card {
+  background-color: #1e293b;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+  border-left: 4px solid #3b82f6;
+}
+
+.mechanic-card h3 {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.mechanic-card p {
+  font-size: 14px;
+  color: #cbd5e1;
+}
+
+.connect-button {
+  margin-top: 12px;
+  background-color: #3b82f6;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.service-card {
+  background-color: #1e293b;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+  position: relative;
+  border-left: 4px solid #facc15;
+}
+
+.service-card h3 {
+  font-size: 16px;
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.service-card p {
+  font-size: 14px;
+  color: #e5e7eb;
+  margin: 2px 0;
+}
+
+.status-label {
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 12px;
+  padding: 4px 10px;
+  text-transform: uppercase;
+}
+
+.status-label.in-progress {
+  background-color: #facc15;
+  color: #1f2937;
+}
+
+.status-label.scheduled {
+  background-color: #9ca3af;
+  color: #1f2937;
+}
+
+.dashboard-actions {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.emergency-button,
+.schedule-button,
+.history-button {
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.emergency-button {
+  background-color: #dc2626;
+  color: white;
+}
+
+.schedule-button {
+  background-color: #2563eb;
+  color: white;
+}
+
+.history-button {
+  background-color: #facc15;
+  color: #1f2937;
+}
+
+.search-bar-box {
+  background-color: #dc2626;
+  padding: 20px 30px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  color: white;
+}
+
+.search-bar-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.search-bar-ui {
+  display: flex;
+  gap: 20px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 200px;
+}
+
+.input-group label {
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.input-group input,
+.input-group select {
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.search-button {
+  background-color: #facc15;
+  color: #1e293b;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #eab308;
+}
+
+.sidebar-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 15px;
+  margin-bottom: 12px;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: transform 0.2s ease;
+  width: 160px;
+}
+
+.sidebar-button:hover {
+  transform: scale(1.05);
+}
+
+.btn-red {
+  background-color: #e53935;
+}
+
+.btn-blue {
+  background-color: #1e88e5;
+}
+
+.btn-yellow {
+  background-color: #fbc02d;
+}
+
+.back-to-landing-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 45px;
+  height: 45px;
+  background: linear-gradient(45deg, #6366f1, #8b5cf6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.back-to-landing-button:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+  background: linear-gradient(45deg, #4f46e5, #7c3aed);
+}
+
+.back-to-landing-button:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+  .back-to-landing-button {
+    top: 15px;
+    left: 15px;
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+}

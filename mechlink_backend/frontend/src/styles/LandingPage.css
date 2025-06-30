@@ -1,0 +1,52 @@
+/* === CORE STYLES === */
+.landing-page {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #1f2937;
+  min-height: 100vh;
+}
+
+/* === SHARED NAVBAR === */
+.navbar {
+  background-color: #0f172a;
+  color: white;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar .logo {
+  display: flex;
+  align-items: center;
+  font-size: 26px;
+  font-weight: bold;
+  color: #facc15;
+}
+
+/* === SHARED FOOTER === */
+.footer {
+  background-color: #0f172a;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+}
+
+/* === UTILITY CLASSES === */
+.btn-primary {
+  background-color: #3b82f6;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-2px);
+}

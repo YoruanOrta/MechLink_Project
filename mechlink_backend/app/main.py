@@ -2,47 +2,54 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from app.api.v1 import notifications
-from sqlalchemy import text
 from app.config.database import Base, engine, get_db
 from app.config.settings import settings
-from app.api.v1 import users, vehicles, auth, maintenance, workshops, appointments, geographic, analytics, reviews
+from app.api.v1 import users, vehicles, auth, maintenance, workshops, appointments, geographic
 
-# Create the tables in the database
 Base.metadata.create_all(bind=engine)
 
-# Create FastAPI application
 app = FastAPI(
     title=settings.APP_NAME,
-    description="API for vehicle maintenance management",
+    description="API para gestión de mantenimiento vehicular",
     version=settings.VERSION,
     debug=settings.DEBUG
 )
 
-# Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:49998", 
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:49998",
+        "*"
+    ],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allow_headers=[
+        "Authorization", 
+        "Content-Type", 
+        "Accept",
+        "Origin",
+        "X-Requested-With"
+    ],
+    expose_headers=["*"]
 )
 
-# Include routers
-app.include_router(users.router, prefix="/api/v1") # ✅ USERS
-app.include_router(vehicles.router, prefix="/api/v1") # ✅ VEHICLES
-app.include_router(auth.router, prefix="/api/v1") # ✅ AUTHENTICATION
-app.include_router(maintenance.router, prefix="/api/v1") # ✅ MAINTENANCE
-app.include_router(workshops.router, prefix="/api/v1") # ✅ WORKSHOPS
-app.include_router(appointments.router, prefix="/api/v1") # ✅ APPOINTMENTS
-app.include_router(geographic.router, prefix="/api/v1")  # ✅ GEOGRAPHICAL
-app.include_router(notifications.router, prefix="/api/v1") # ✅ NOTIFICATIONS
-app.include_router(analytics.router, prefix="/api/v1") # ✅ ANALYTICS
-app.include_router(reviews.router, prefix="/api/v1") # ✅ REVIEWS
+# Incluir routers
+app.include_router(users.router, prefix="/api/v1")
+app.include_router(vehicles.router, prefix="/api/v1")
+app.include_router(auth.router, prefix="/api/v1")
+app.include_router(maintenance.router, prefix="/api/v1")
+app.include_router(workshops.router, prefix="/api/v1")
+app.include_router(appointments.router, prefix="/api/v1")
+app.include_router(geographic.router, prefix="/api/v1")
+app.include_router(notifications.router, prefix="/api/v1")
 
 @app.get("/")
 def read_root():
     return {
-        "message": "¡MechLink API working! 🚗⚙️",
+        "message": "¡MechLink API funcionando! 🚗⚙️",
         "version": settings.VERSION,
         "docs": "/docs",
         "database": "Connected",
@@ -53,6 +60,7 @@ def read_root():
             "appointments": "/api/v1/appointments",
             "geographic": "/api/v1/geographic",
             "maintenance": "/api/v1/maintenance",
+            "notifications": "/api/v1/notifications",
             "auth": "/api/v1/auth",
             "docs": "/docs",
             "health": "/health"
@@ -62,7 +70,7 @@ def read_root():
 @app.get("/health")
 def health_check(db: Session = Depends(get_db)):
     try:
-        db.execute(text("SELECT 1"))
+        db.execute("SELECT 1")
         return {
             "status": "healthy", 
             "api": "MechLink",
@@ -83,11 +91,11 @@ def database_info(db: Session = Depends(get_db)):
         result = db.execute("SELECT name FROM sqlite_master WHERE type='table';")
         tables = [row[0] for row in result.fetchall()]
         
-        # Count records
         user_count = db.execute("SELECT COUNT(*) FROM users").fetchone()[0] if 'users' in tables else 0
         vehicle_count = db.execute("SELECT COUNT(*) FROM vehicles").fetchone()[0] if 'vehicles' in tables else 0
         workshop_count = db.execute("SELECT COUNT(*) FROM workshops").fetchone()[0] if 'workshops' in tables else 0
         appointment_count = db.execute("SELECT COUNT(*) FROM appointments").fetchone()[0] if 'appointments' in tables else 0
+        notification_count = db.execute("SELECT COUNT(*) FROM notifications").fetchone()[0] if 'notifications' in tables else 0  # ✅ AGREGAR
         
         return {
             "database_type": "SQLite",
@@ -97,7 +105,8 @@ def database_info(db: Session = Depends(get_db)):
                 "users": user_count,
                 "vehicles": vehicle_count,
                 "workshops": workshop_count,
-                "appointments": appointment_count
+                "appointments": appointment_count,
+                "notifications": notification_count
             },
             "status": "Connected"
         }

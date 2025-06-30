@@ -15,7 +15,7 @@ from app.schemas.maintenance_schemas import (
 )
 from app.api.deps import get_current_user
 
-router = APIRouter(prefix="/maintenance", tags=["mantenimiento"])
+router = APIRouter(prefix="/maintenance", tags=["maintenance"])
 
 # === MAINTENANCE RECORDS ===
 

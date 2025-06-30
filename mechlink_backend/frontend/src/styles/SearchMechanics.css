@@ -1,0 +1,57 @@
+.search-mechanics-container {
+  padding: 2rem;
+  background-color: #343541;
+  color: #f5f5f5;
+  font-family: 'Segoe UI', sans-serif;
+  min-height: 100vh;
+}
+
+.search-mechanics-container h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.search-inputs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.search-inputs input {
+  padding: 0.6rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  flex: 1;
+}
+
+.search-button {
+  padding: 0.6rem 1.5rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #2563eb;
+}
+
+.results-list {
+  margin-top: 2rem;
+  list-style: none;
+  padding-left: 0;
+}
+
+.results-list li {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
