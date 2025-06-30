@@ -13,13 +13,13 @@ function RegisterVehicle() {
     make: "",
     model: "",
     year: "",
+    user_id: localStorage.getItem("user_id"),
     license_plate: "",
     color: "",
     mileage: "",
     transmission: "",
     engine_size: "",
     notes: "",
-    user_id: user_id,
   });
 
   const [message, setMessage] = useState("");
