@@ -329,7 +329,7 @@ function NewLandingPage() {
                 <h4>Product</h4>
                 <a href="#features">Features</a>
                 <a href="#how-it-works">How it Works</a>
-                <a href="/dashboard">Mobile App</a>
+                <a href="/">Mobile App</a>
               </div>
               
               <div className="link-group">

@@ -20,6 +20,9 @@ function Dashboard() {
   const [appointmentsLoading, setAppointmentsLoading] = useState(true);
   const [favorites, setFavorites] = useState([]);
   const [favoritesLoading, setFavoritesLoading] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [vehicleToDelete, setVehicleToDelete] = useState(null);
+  const [deletingVehicle, setDeletingVehicle] = useState(false);
 
   const fetchWorkshops = async () => {
     setLoading(true);
@@ -57,6 +60,49 @@ function Dashboard() {
       setVehiclesLoading(false);
     }
   };
+
+  const openDeleteModal = (vehicle) => {
+    setVehicleToDelete(vehicle);
+    setShowDeleteModal(true);
+  };
+
+  const closeDeleteModal = () => {
+    setShowDeleteModal(false);
+    setVehicleToDelete(null);
+  };
+
+  const handleDeleteVehicle = async () => {
+    if (!vehicleToDelete) return;
+    
+    try {
+      setDeletingVehicle(true);
+      
+      const response = await tokenManager.delete(`http://localhost:8000/api/v1/vehicles/${vehicleToDelete.id}`);
+      
+      if (response.ok) {
+        setVehicles(prevVehicles => 
+          prevVehicles.filter(vehicle => vehicle.id !== vehicleToDelete.id)
+        );
+        
+        closeDeleteModal();
+        alert(`✅ ${vehicleToDelete.make} ${vehicleToDelete.model} deleted successfully!`);
+        
+        setTimeout(() => {
+          fetchVehicles();
+        }, 500);
+        
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to delete vehicle');
+      }
+    } catch (error) {
+      console.error('Error deleting vehicle:', error);
+      alert('❌ Failed to delete vehicle. Please try again.');
+    } finally {
+      setDeletingVehicle(false);
+    }
+  };
+
   const fetchAppointments = async () => {
     setAppointmentsLoading(true);
     try {
@@ -207,45 +253,69 @@ function Dashboard() {
 
   return (
     <div className="dashboard-container">
-    <button 
-      onClick={() => navigate("/")} 
-      className="back-to-landing-button"
-      title="Back to Landing Page"
-    >
-      ←
-    </button>
       <aside className="sidebar">
-        <h2 className="sidebar-logo">
-          <img src="/images/gear.svg" alt="MechLink Logo" style={{width: '90px', height: '90px'}} />
-        </h2>
+      <button 
+        onClick={() => navigate("/")} 
+        className="back-to-landing-button"
+        title="Back to Landing Page"
+      >
+        ←
+      </button>
+        <div className="sidebar-logo">
+          <img src="/images/gear.svg" alt="MechLink Logo" />
+          <div className="logo-text">MechLink</div>
+        </div>
+        
         <ul>
           <li 
-            className="sidebar-button btn-blue pulse"
+            className={`sidebar-button btn-blue ${activeSection === 'search' ? 'pulse' : ''}`}
             onClick={() => setActiveSection('search')}
           >
-              🔍 Search Mechanics
+            <div className="sidebar-button-icon">🔍</div>
+            <div className="sidebar-button-text">Search Mechanics</div>
           </li>
+          
           <li 
-              className="sidebar-button btn-green"
-              onClick={() => setActiveSection('services')}
+            className={`sidebar-button btn-green ${activeSection === 'services' ? 'pulse' : ''}`}
+            onClick={() => setActiveSection('services')}
           >
-            🛠️ My Services
+            <div className="sidebar-button-icon">🛠️</div>
+            <div className="sidebar-button-text">My Services</div>
           </li>
-          <li onClick={() => navigate("/appointments/book")} className="sidebar-button btn-red">⚡ Easy Appointments</li>
-          <li onClick={() => navigate("/maintenance/logs")} className="sidebar-button btn-blue">📘 Maintenance Logs</li>
+          
+          <li 
+            onClick={() => navigate("/appointments/book")} 
+            className="sidebar-button btn-red"
+          >
+            <div className="sidebar-button-icon">⚡</div>
+            <div className="sidebar-button-text">Easy Appointments</div>
+          </li>
+          
+          <li 
+            onClick={() => navigate("/maintenance/logs")} 
+            className="sidebar-button btn-purple"
+          >
+            <div className="sidebar-button-icon">📘</div>
+            <div className="sidebar-button-text">Maintenance Logs</div>
+          </li>
+          
           <li 
             className="sidebar-button btn-yellow"
             onClick={() => navigate("/favorites")}
           >
-          ⭐ Favorites
-        </li>
+            <div className="sidebar-button-icon">⭐</div>
+            <div className="sidebar-button-text">Favorites</div>
+          </li>
         </ul>
       </aside>
 
       <main className="main-content">
-        <div className="dashboard-header">
-          <NotificationWidget />
-        </div>
+      <div className="dashboard-header">
+        <h1 className="dashboard-title">
+          {activeSection === 'search' ? 'Find Mechanics' : 'My Services'}
+        </h1>
+        <NotificationWidget />
+      </div>
 
         {activeSection === 'search' ? (
           <>
@@ -535,6 +605,40 @@ function Dashboard() {
                     <p style={{color: '#e5e7eb'}}>🎨 Color: {vehicle.color}</p>
                     <p style={{color: '#e5e7eb'}}>🏃 Mileage: {vehicle.current_mileage || vehicle.mileage || 0} km</p>
                     {vehicle.notes && <p style={{color: '#94a3b8'}}>📝 {vehicle.notes}</p>}
+                    <div style={{
+                        marginTop: '15px',
+                        display: 'flex',
+                        gap: '10px',
+                        alignItems: 'center'
+                      }}>
+                        <button 
+                          onClick={() => openDeleteModal(vehicle)}
+                          style={{
+                            backgroundColor: '#ef4444',
+                            color: 'white',
+                            border: 'none',
+                            padding: '8px 16px',
+                            borderRadius: '6px',
+                            fontSize: '14px',
+                            fontWeight: 'bold',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            transition: 'all 0.3s ease'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.target.style.backgroundColor = '#dc2626';
+                            e.target.style.transform = 'scale(1.05)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.target.style.backgroundColor = '#ef4444';
+                            e.target.style.transform = 'scale(1)';
+                          }}
+                        >
+                          🗑️ Delete Vehicle
+                        </button>
+                      </div>
                   </div>
                 ))}
                 
@@ -568,19 +672,26 @@ function Dashboard() {
               </div>
             )}
           </div>
+          <div style={{ height: '40px' }}></div>
+          <div style={{
+            height: '2px',
+            background: 'linear-gradient(90deg, transparent, #475569, transparent)',
+            margin: '50px 0',
+            opacity: 0.3
+          }}></div>
         {/* Active Services */}
         {vehicles.length > 0 && (
           <section className="active-services">
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px'}}>
               <h2>🚗 Active Services</h2>
               <button 
                 style={{
                   backgroundColor: '#3b82f6',
                   color: 'white',
-                  padding: '10px 20px',
+                  padding: '12px 24px',
                   border: 'none',
                   borderRadius: '8px',
-                  fontSize: '14px',
+                  fontSize: '16px',
                   fontWeight: 'bold',
                   cursor: 'pointer'
                 }}
@@ -686,10 +797,10 @@ function Dashboard() {
                         </div>
                         <div>
                           <p style={{color: '#e5e7eb', margin: '5px 0'}}>
-                            🚗 <strong>Vehicle:</strong> {vehicle ? `${vehicle.make} ${vehicle.model}` : 'Loading...'}
+                            🚗 <strong>Vehicle:</strong> {vehicle ? `${vehicle.make} ${vehicle.model}` : 'Vehicle Deleted'}
                           </p>
                           <p style={{color: '#e5e7eb', margin: '5px 0'}}>
-                            🏃 <strong>Plate:</strong> {vehicle ? vehicle.license_plate : 'Loading...'}
+                            🏃 <strong>Plate:</strong> {vehicle ? vehicle.license_plate : 'Vehicle Deleted'}
                           </p>
                         </div>
                       </div>
@@ -759,22 +870,200 @@ function Dashboard() {
               </div>
             )}
             {/* Dashboard actions */}
-            <div className="dashboard-actions" style={{marginTop: '20px'}}>
-              <button className="emergency-button">🚨 EMERGENCY</button>
+            <div style={{
+              display: 'flex',
+              gap: '15px',
+              marginTop: '50px',
+              marginBottom: '30px',
+              justifyContent: 'center'
+            }}>
               <button 
-                className="schedule-button"
                 onClick={() => navigate("/appointments/book")}
+                style={{
+                  background: 'linear-gradient(45deg, #3b82f6, #2563eb)',
+                  color: 'white',
+                  border: 'none',
+                  padding: '15px 30px',
+                  borderRadius: '12px',
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 15px rgba(59, 130, 246, 0.3)',
+                  minWidth: '160px',
+                  justifyContent: 'center'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = 'translateY(-3px)';
+                  e.target.style.boxShadow = '0 8px 25px rgba(59, 130, 246, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'translateY(0)';
+                  e.target.style.boxShadow = '0 4px 15px rgba(59, 130, 246, 0.3)';
+                }}
               >
                 📅 SCHEDULE
               </button>
+              
               <button 
-                className="history-button"
                 onClick={() => navigate("/maintenance/logs")}
+                style={{
+                  background: 'linear-gradient(45deg, #8b5cf6, #7c3aed)',
+                  color: 'white',
+                  border: 'none',
+                  padding: '15px 30px',
+                  borderRadius: '12px',
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 15px rgba(139, 92, 246, 0.3)',
+                  minWidth: '160px',
+                  justifyContent: 'center'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = 'translateY(-3px)';
+                  e.target.style.boxShadow = '0 8px 25px rgba(139, 92, 246, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'translateY(0)';
+                  e.target.style.boxShadow = '0 4px 15px rgba(139, 92, 246, 0.3)';
+                }}
               >
                 📊 HISTORY
               </button>
             </div>
           </section>
+        )}
+          {showDeleteModal && vehicleToDelete && (
+            <div style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              zIndex: 9999
+            }}>
+              <div style={{
+                backgroundColor: '#1e293b',
+                borderRadius: '16px',
+                padding: '30px',
+                maxWidth: '400px',
+                width: '90%',
+                border: '2px solid #ef4444',
+                boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5)'
+              }}>
+                {/* Header */}
+                <div style={{
+                  textAlign: 'center',
+                  marginBottom: '20px'
+                }}>
+                  <h3 style={{
+                    color: '#ef4444',
+                    fontSize: '1.5rem',
+                    marginBottom: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '10px'
+                  }}>
+                    🗑️ Delete Vehicle
+                  </h3>
+                  <p style={{color: '#94a3b8'}}>
+                    This action cannot be undone
+                  </p>
+                </div>
+                  {/* Vehicle Info */}
+                    <div style={{
+                      backgroundColor: '#374151',
+                      padding: '15px',
+                      borderRadius: '8px',
+                      marginBottom: '20px'
+                  }}>
+                    <h4 style={{color: '#10b981', marginBottom: '8px'}}>
+                      {vehicleToDelete.make} {vehicleToDelete.model} ({vehicleToDelete.year})
+                    </h4>
+                    <p style={{color: '#e5e7eb', fontSize: '14px'}}>
+                      🚗 Plate: {vehicleToDelete.license_plate}
+                      </p>
+                      <p style={{color: '#e5e7eb', fontSize: '14px'}}>
+                        🎨 Color: {vehicleToDelete.color}
+                      </p>
+                    </div>
+                    {/* Confirmation Message */}
+                    <p style={{
+                      color: '#fbbf24',
+                      textAlign: 'center',
+                      marginBottom: '25px',
+                      fontSize: '14px',
+                      fontWeight: '500'
+                    }}>
+                      ⚠️ Are you sure you want to delete this vehicle?
+                      <br />
+                      All associated maintenance records and appointments will be affected.
+                    </p>
+                    {/* Buttons */}
+                    <div style={{
+                      display: 'flex',
+                      gap: '10px',
+                      justifyContent: 'center'
+                    }}>
+                      <button
+                        onClick={closeDeleteModal}
+                        disabled={deletingVehicle}
+                        style={{
+                          backgroundColor: '#6b7280',
+                          color: 'white',
+                          border: 'none',
+                          padding: '12px 24px',
+                          borderRadius: '8px',
+                          fontSize: '14px',
+                          fontWeight: 'bold',
+                          cursor: deletingVehicle ? 'not-allowed' : 'pointer',
+                          opacity: deletingVehicle ? 0.5 : 1,
+                          transition: 'all 0.3s ease',
+                          flex: 1
+                        }}
+                      >
+                        Cancel
+                      </button>
+                      
+                      <button
+                        onClick={handleDeleteVehicle}
+                        disabled={deletingVehicle}
+                        style={{
+                          backgroundColor: '#ef4444',
+                          color: 'white',
+                          border: 'none',
+                          padding: '12px 24px',
+                          borderRadius: '8px',
+                          fontSize: '14px',
+                          fontWeight: 'bold',
+                          cursor: deletingVehicle ? 'not-allowed' : 'pointer',
+                          opacity: deletingVehicle ? 0.7 : 1,
+                          transition: 'all 0.3s ease',
+                          flex: 1,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '6px'
+                        }}
+                      >
+                        {deletingVehicle ? '🔄 Deleting...' : '🗑️ Yes, Delete'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
           )}
         </>
         )}
