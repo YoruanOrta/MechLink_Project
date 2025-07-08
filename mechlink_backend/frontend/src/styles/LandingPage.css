@@ -50,3 +50,12 @@
   background-color: #1d4ed8;
   transform: translateY(-2px);
 }
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

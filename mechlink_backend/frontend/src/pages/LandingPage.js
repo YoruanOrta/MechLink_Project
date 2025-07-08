@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "../styles/LandingPage.css";
 
 function NewLandingPage() {
   const navigate = useNavigate();
@@ -55,7 +56,7 @@ function NewLandingPage() {
       <nav className="premium-nav">
         <div className="nav-container">
           <div className="logo-section">
-            <span className="car-icon">🚗</span>
+            <span className="car-icon"></span>
             <span className="logo-text">MechLink</span>
           </div>
           
@@ -458,7 +459,7 @@ function NewLandingPage() {
         .hero-section {
           background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
           color: white;
-          padding: 8rem 2rem 4rem;
+          padding: 11.6rem 2rem 4rem;
           margin-top: 4rem;
         }
 
@@ -534,6 +535,7 @@ function NewLandingPage() {
           display: flex;
           justify-content: center;
           align-items: center;
+          transform: translateY(-40px);
         }
 
         .phone-mockup {

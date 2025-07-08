@@ -354,7 +354,6 @@ function Dashboard() {
                 </button>
               </div>
             </div>
-
             <div className="dashboard-body">
               <section className="available-mechanics">
                 <h2>🔧 Available Mechanics</h2>
@@ -379,7 +378,7 @@ function Dashboard() {
                       backgroundColor: '#1e293b',
                       padding: '20px',
                       borderRadius: '12px',
-                      border: '2px solid #10b981',
+                      border: '2px solid rgb(16, 129, 185)',
                       marginBottom: '15px',
                       position: 'relative'
                     }}>
@@ -391,7 +390,7 @@ function Dashboard() {
                         marginBottom: '15px'
                       }}>
                         <h3 style={{
-                          color: '#10b981',
+                          color: '#3b77ed',
                           marginBottom: '0',
                           flex: 1
                         }}>
@@ -540,7 +539,7 @@ function Dashboard() {
           {/* My Services Section */}
           <div className="my-services-section">
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
-              <h2>🛠️ My Services</h2>
+              <h2> My Vehicles</h2>
               <button 
                 style={{
                   backgroundColor: '#10b981',
