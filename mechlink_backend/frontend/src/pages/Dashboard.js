@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import NotificationWidget from "../components/NotificationWidget";
 import tokenManager from '../utils/tokenManager';
 import { Link } from "react-router-dom";
+import { Search, Wrench, Calendar, FileText, Star } from "lucide-react";
+
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -268,43 +270,37 @@ function Dashboard() {
         
         <ul>
           <li 
-            className={`sidebar-button btn-blue ${activeSection === 'search' ? 'pulse' : ''}`}
+            className="sidebar-button btn-blue"
             onClick={() => setActiveSection('search')}
           >
-            <div className="sidebar-button-icon">🔍</div>
-            <div className="sidebar-button-text">Search Mechanics</div>
+            <Search className="sidebar-button-icon" size={22} />
+            <span className="sidebar-button-text">Search Mechanics</span>
           </li>
           
           <li 
-            className={`sidebar-button btn-green ${activeSection === 'services' ? 'pulse' : ''}`}
+            className="sidebar-button btn-green"
             onClick={() => setActiveSection('services')}
           >
-            <div className="sidebar-button-icon">🛠️</div>
-            <div className="sidebar-button-text">My Services</div>
+            <Wrench className="sidebar-button-icon" size={22} />
+            <span className="sidebar-button-text">My Services</span>
           </li>
           
-          <li 
-            onClick={() => navigate("/appointments/book")} 
-            className="sidebar-button btn-red"
-          >
-            <div className="sidebar-button-icon">⚡</div>
-            <div className="sidebar-button-text">Easy Appointments</div>
+          <li onClick={() => navigate("/appointments/book")} className="sidebar-button btn-red">
+            <Calendar className="sidebar-button-icon" size={22} />
+            <span className="sidebar-button-text">Easy Appointments</span>
           </li>
           
-          <li 
-            onClick={() => navigate("/maintenance/logs")} 
-            className="sidebar-button btn-purple"
-          >
-            <div className="sidebar-button-icon">📘</div>
-            <div className="sidebar-button-text">Maintenance Logs</div>
+          <li onClick={() => navigate("/maintenance/logs")} className="sidebar-button btn-blue">
+            <FileText className="sidebar-button-icon" size={22} />
+            <span className="sidebar-button-text">Maintenance Logs</span>
           </li>
           
           <li 
             className="sidebar-button btn-yellow"
             onClick={() => navigate("/favorites")}
           >
-            <div className="sidebar-button-icon">⭐</div>
-            <div className="sidebar-button-text">Favorites</div>
+            <Star className="sidebar-button-icon" size={22} />
+            <span className="sidebar-button-text">Favorites</span>
           </li>
         </ul>
       </aside>
@@ -434,7 +430,6 @@ function Dashboard() {
                           }}
                         >
                           {isFavorite(workshop.id) ? '⭐' : '☆'}
-                          {isFavorite(workshop.id) ? 'Favorited' : 'Add to Favorites'}
                         </button>
                       </div>
 
@@ -595,9 +590,9 @@ function Dashboard() {
                     padding: '20px',
                     borderRadius: '12px',
                     marginBottom: '15px',
-                    border: '2px solid #10b981'
+                    border: '2px solid rgb(16, 83, 185)'
                   }}>
-                    <h3 style={{color: '#10b981', marginBottom: '10px'}}>
+                    <h3 style={{color: '#fcfcfc', marginBottom: '10px'}}>
                       {vehicle.make} {vehicle.model} ({vehicle.year})
                     </h3>
                     <p style={{color: '#e5e7eb'}}>🚗 Plate: {vehicle.license_plate}</p>
@@ -645,7 +640,7 @@ function Dashboard() {
                   textAlign: 'center',
                   marginTop: '20px',
                   padding: '20px',
-                  border: '2px dashed #10b981',
+                  border: '2px dashed #0db9e3',
                   borderRadius: '12px',
                   backgroundColor: '#1e293b'
                 }}>
@@ -758,7 +753,7 @@ function Dashboard() {
                         padding: '20px',
                         borderRadius: '12px',
                         marginBottom: '15px',
-                        border: `2px solid ${isUpcoming ? '#3b82f6' : '#10b981'}`,
+                        border: `2px solid ${isUpcoming ? '#3b82f6' : '#2f8fdd'}`,
                         position: 'relative'
                       }}
                     >
@@ -811,7 +806,7 @@ function Dashboard() {
                         borderRadius: '8px',
                         marginTop: '10px'
                       }}>
-                        <p style={{color: '#10b981', margin: '0', fontWeight: 'bold'}}>
+                        <p style={{color: '#f0f5f5', margin: '0', fontWeight: 'bold'}}>
                           📅 {dateStr} at {timeStr}
                         </p>
                         {appointment.notes && (
@@ -823,32 +818,6 @@ function Dashboard() {
 
                       {/* Action buttons */}
                       <div style={{display: 'flex', gap: '10px', marginTop: '15px'}}>
-                        {isUpcoming && (
-                          <>
-                            <button style={{
-                              backgroundColor: '#ef4444',
-                              color: 'white',
-                              padding: '6px 12px',
-                              border: 'none',
-                              borderRadius: '6px',
-                              fontSize: '12px',
-                              cursor: 'pointer'
-                            }}>
-                              Cancel
-                            </button>
-                            <button style={{
-                              backgroundColor: '#f59e0b',
-                              color: 'white',
-                              padding: '6px 12px',
-                              border: 'none',
-                              borderRadius: '6px',
-                              fontSize: '12px',
-                              cursor: 'pointer'
-                            }}>
-                              Reschedule
-                            </button>
-                          </>
-                        )}
                         {workshop && (
                           <button style={{
                             backgroundColor: '#10b981',

@@ -2,7 +2,7 @@
 
 .appointment-form-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  background: linear-gradient(#4A4E69);
   color: #ffffff;
   padding: 40px 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -21,16 +21,6 @@
   border: 1px solid #475569;
   position: relative;
   overflow: hidden;
-}
-
-.appointment-form-wrapper::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #3b82f6, #10b981, #f59e0b, #ef4444);
 }
 
 /* Header */
