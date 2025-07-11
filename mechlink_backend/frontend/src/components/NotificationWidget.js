@@ -28,15 +28,44 @@ function NotificationWidget() {
       
       if (response.ok) {
         const data = await response.json();
-        console.log('✅ Notifications fetched:', data);
+        console.log('✅ All notifications from server:', data);
         
-        setNotifications(data || []);
+        const now = new Date();
+        const visibleNotifications = (data || []).filter(notification => {
+          if (notification.type === 'appointment_confirmation' || 
+              notification.type === 'system_update' ||
+              notification.type === 'review_request') {
+            return true;
+          }
+          
+          if (notification.type === 'appointment_reminder') {
+            if (!notification.scheduled_for) {
+              console.log('⚠️ Reminder without scheduled_for:', notification.title);
+              return true;
+            }
+            
+            const scheduledTime = new Date(notification.scheduled_for);
+            const isTimeToShow = scheduledTime <= now;
+            
+            console.log(`⏰ Reminder: "${notification.title}"`);
+            console.log(`   Scheduled for: ${scheduledTime.toLocaleString()}`);
+            console.log(`   Current time: ${now.toLocaleString()}`);
+            console.log(`   Should show: ${isTimeToShow ? '✅ YES' : '❌ NO (future)'}`);
+            
+            return isTimeToShow;
+          }
+          
+          return true;
+        });
         
-        // Count unread notifications more accurately
-        const unread = (data || []).filter(notif => 
+        console.log(`📊 Filtered: ${data.length} total → ${visibleNotifications.length} visible notifications`);
+        
+        setNotifications(visibleNotifications);
+        
+        const unread = visibleNotifications.filter(notif => 
           !notif.read_at && notif.status !== 'read'
         ).length;
-        console.log('🔢 Unread count:', unread);
+        console.log('🔢 Unread count (visible only):', unread);
         setUnreadCount(unread);
       } else {
         console.error('❌ Error fetching notifications:', response.status);

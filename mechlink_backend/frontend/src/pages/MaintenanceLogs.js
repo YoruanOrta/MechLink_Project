@@ -89,7 +89,7 @@ function MaintenanceLogs() {
 
   const getVehicleInfo = (vehicleId) => {
     const vehicle = vehicles.find(v => v.id === vehicleId);
-    return vehicle ? `${vehicle.make} ${vehicle.model} (${vehicle.license_plate})` : "Unknown Vehicle";
+    return vehicle ? `${vehicle.make} ${vehicle.model} (${vehicle.license_plate})` : "Vehicle Deleted";
   };
 
   const getWorkshopInfo = (workshopId) => {

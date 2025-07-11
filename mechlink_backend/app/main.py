@@ -5,16 +5,50 @@ from app.api.v1 import notifications
 from app.config.database import Base, engine, get_db
 from app.config.settings import settings
 from app.api.v1 import users, vehicles, auth, maintenance, workshops, appointments, geographic
+from contextlib import asynccontextmanager
+from apscheduler.schedulers.background import BackgroundScheduler
 
+# Create the tables in the database
 Base.metadata.create_all(bind=engine)
+
+def process_scheduled_notifications():
+    """Process scheduled notifications every minute"""
+    from app.services.notification_service import NotificationService
+    from app.config.database import get_db
+    
+    try:
+        db = next(get_db())
+        service = NotificationService(db)
+        service.process_scheduled_notifications()
+    except Exception as e:
+        print(f"Error processing notifications: {e}")
+
+# Scheduler
+scheduler = BackgroundScheduler()
+scheduler.add_job(
+    process_scheduled_notifications, 
+    'interval', 
+    minutes=1,
+    id='process_notifications'
+)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    scheduler.start()
+    print("📅 Notification scheduler started")
+    yield
+    scheduler.shutdown()
+    print("📅 Notification scheduler stopped")
 
 app = FastAPI(
     title=settings.APP_NAME,
-    description="API para gestión de mantenimiento vehicular",
+    description="API for vehicle maintenance management",
     version=settings.VERSION,
-    debug=settings.DEBUG
+    debug=settings.DEBUG,
+    lifespan=lifespan
 )
 
+# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -75,7 +109,8 @@ def health_check(db: Session = Depends(get_db)):
             "status": "healthy", 
             "api": "MechLink",
             "database": "Connected ✅",
-            "version": settings.VERSION
+            "version": settings.VERSION,
+            "scheduler": "Running 📅" if scheduler.running else "Stopped ❌"
         }
     except Exception as e:
         return {
@@ -95,7 +130,7 @@ def database_info(db: Session = Depends(get_db)):
         vehicle_count = db.execute("SELECT COUNT(*) FROM vehicles").fetchone()[0] if 'vehicles' in tables else 0
         workshop_count = db.execute("SELECT COUNT(*) FROM workshops").fetchone()[0] if 'workshops' in tables else 0
         appointment_count = db.execute("SELECT COUNT(*) FROM appointments").fetchone()[0] if 'appointments' in tables else 0
-        notification_count = db.execute("SELECT COUNT(*) FROM notifications").fetchone()[0] if 'notifications' in tables else 0  # ✅ AGREGAR
+        notification_count = db.execute("SELECT COUNT(*) FROM notifications").fetchone()[0] if 'notifications' in tables else 0
         
         return {
             "database_type": "SQLite",

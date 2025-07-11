@@ -73,7 +73,12 @@ class NotificationService:
         self.db.commit()
         self.db.refresh(notification)
         
-        if not scheduled_for or scheduled_for <= datetime.now():
+        if scheduled_for:
+            logger.info(f"📝 Notification '{title}' scheduled for {scheduled_for}")
+        else:
+            logger.info(f"📤 Sending notification '{title}' immediately")
+        
+        if not scheduled_for:
             self.send_notification(notification.id)
         
         return notification
@@ -388,15 +393,19 @@ class NotificationService:
         
         user_preferences = self.get_user_preferences(appointment.user_id)
         appointment_datetime = appointment.appointment_datetime
+        now = datetime.now()
+        
+        time_until_appointment = appointment_datetime - now
+        hours_until_appointment = time_until_appointment.total_seconds() / 3600
+        
+        logger.info(f"⏰ Appointment in {hours_until_appointment:.1f} hours from now")
         
         reminders = []
-        reminder_times = [user_preferences.reminder_hours_before, 1]  # 24h and 1h before by default
+        reminder_times = [user_preferences.reminder_hours_before, 1]
         
         for hours_before in reminder_times:
             reminder_time = appointment_datetime - timedelta(hours=hours_before)
-            
-            # Only schedule if it is in the future
-            if reminder_time > datetime.now():
+            if reminder_time > now and hours_until_appointment > hours_before:
                 workshop = self.db.query(Workshop).filter(
                     Workshop.id == appointment.workshop_id
                 ).first()
@@ -405,13 +414,15 @@ class NotificationService:
                     Vehicle.id == appointment.vehicle_id
                 ).first()
                 
-                title = f"Reminder: Appointment at {hours_before} hour{'s' if hours_before > 1 else ''}"
-                message = f"Your appointment for {appointment.service_type} in {workshop.name} is in {hours_before} hour{'s' if hours_before > 1 else ''}. Vehicle: {vehicle.make} {vehicle.model} ({vehicle.license_plate})"
+                title = f"Reminder: Appointment in {hours_before} hour{'s' if hours_before > 1 else ''}"
+                message = f"Your appointment for {appointment.service_type} at {workshop.name} is in {hours_before} hour{'s' if hours_before > 1 else ''}. Vehicle: {vehicle.make} {vehicle.model} ({vehicle.license_plate})"
+                
+                logger.info(f"📅 Scheduling reminder for {reminder_time} ({hours_before}h before appointment)")
                 
                 reminder = self.create_notification(
                     user_id=appointment.user_id,
                     notification_type=NotificationType.APPOINTMENT_REMINDER,
-                    channel=NotificationChannel("email"),
+                    channel=NotificationChannel.email,
                     title=title,
                     message=message,
                     scheduled_for=reminder_time,
@@ -429,8 +440,15 @@ class NotificationService:
                 
                 if reminder:
                     reminders.append(reminder)
+            else:
+                if reminder_time <= now:
+                    logger.info(f"⚠️ Skipping {hours_before}h reminder - would be in the past ({reminder_time})")
+                elif hours_until_appointment <= hours_before:
+                    logger.info(f"⚠️ Skipping {hours_before}h reminder - appointment too soon ({hours_until_appointment:.1f}h away)")
         
+        logger.info(f"✅ Created {len(reminders)} valid reminders for appointment {appointment_id}")
         return reminders
+
     
     def send_appointment_confirmation(self, appointment_id: str) -> Notification:
         """Send confirmation of created appointment"""
@@ -540,14 +558,14 @@ class NotificationService:
         )
     
     def process_scheduled_notifications(self) -> int:
-        """Process pending scheduled notifications"""
+        """Process pending scheduled notifications - MEJORADA"""
         now = datetime.now()
         
-        # Get scheduled notifications that are due to be sent
         scheduled_notifications = self.db.query(Notification).filter(
             and_(
                 Notification.status == NotificationStatus.PENDING,
                 Notification.scheduled_for <= now,
+                Notification.scheduled_for >= now - timedelta(minutes=5),
                 or_(
                     Notification.expires_at.is_(None),
                     Notification.expires_at > now
@@ -557,10 +575,15 @@ class NotificationService:
         
         sent_count = 0
         for notification in scheduled_notifications:
-            if self.send_notification(notification.id):
-                sent_count += 1
+            try:
+                if self.send_notification(notification.id):
+                    sent_count += 1
+            except Exception as e:
+                logger.error(f"Error sending notification {notification.id}: {str(e)}")
         
-        logger.info(f"Processed {len(scheduled_notifications)} scheduled notifications, {sent_count} successfully sent")
+        if scheduled_notifications:
+            logger.info(f"📨 Processed {len(scheduled_notifications)} scheduled notifications, {sent_count} sent successfully")
+        
         return sent_count
     
     def retry_failed_notifications(self) -> int:
