@@ -6,19 +6,19 @@ function NewLandingPage() {
 
   const testimonials = [
     {
-      name: "María González",
+      name: "Juan Perez",
       location: "San Juan",
       image: "/images/user1.jpg",
       quote: "Finally found a reliable mechanic in Bayamón! MechLink made it so easy"
     },
     {
-      name: "Carlos Rivera", 
+      name: "Ana Rivera", 
       location: "Ponce",
       image: "/images/user2.jpg",
       quote: "Never miss my oil changes anymore. The reminders are perfect!"
     },
     {
-      name: "Ana Morales",
+      name: "Fabian Cortez",
       location: "Caguas", 
       image: "/images/user3.jpg",
       quote: "Best app for car maintenance in PR. Super easy to use!"
