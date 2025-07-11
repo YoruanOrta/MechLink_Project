@@ -1,8 +1,8 @@
-/* BookAppointment.css - Modern Premium Design */
+/* BookAppointment.css - Modern Premium Design - FIXED */
 
 .appointment-form-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  background: linear-gradient(#4A4E69);
   color: #ffffff;
   padding: 40px 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -14,23 +14,13 @@
 .appointment-form-wrapper {
   background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
   border-radius: 24px;
-  padding: 40px;
+  padding: 80px 40px 40px 40px;
   max-width: 600px;
   width: 100%;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
   border: 1px solid #475569;
   position: relative;
   overflow: hidden;
-}
-
-.appointment-form-wrapper::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #3b82f6, #10b981, #f59e0b, #ef4444);
 }
 
 /* Header */
@@ -40,6 +30,7 @@
   font-weight: bold;
   text-align: center;
   margin-bottom: 40px;
+  margin-top: 20px;
   text-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
   position: relative;
 }
@@ -266,6 +257,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  z-index: 10;
 }
 
 .back-button:hover {
@@ -327,13 +319,14 @@
   }
 
   .appointment-form-wrapper {
-    padding: 30px 25px;
+    padding: 70px 25px 30px 25px;
     margin: 10px;
   }
 
   .appointment-form-container h2 {
     font-size: 2rem;
     margin-bottom: 30px;
+    margin-top: 15px;
   }
 
   .datetime-grid {
@@ -366,11 +359,12 @@
 
 @media (max-width: 480px) {
   .appointment-form-wrapper {
-    padding: 25px 20px;
+    padding: 60px 20px 25px 20px;
   }
 
   .appointment-form-container h2 {
     font-size: 1.8rem;
+    margin-top: 10px;
   }
 
   .appointment-form select,

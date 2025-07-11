@@ -250,7 +250,6 @@
   font-weight: 500;
 }
 
-/* Indicador de no leída */
 .unread-indicator {
   width: 8px;
   height: 8px;
@@ -262,7 +261,6 @@
   animation: pulse 2s infinite;
 }
 
-/* Estados especiales */
 .notification-item.loading {
   justify-content: center;
   padding: 30px 20px;
@@ -304,7 +302,6 @@
   font-size: 12px;
 }
 
-/* Footer y acciones */
 .notification-footer {
   padding: 16px 20px;
   border-top: 1px solid rgba(59, 130, 246, 0.2);

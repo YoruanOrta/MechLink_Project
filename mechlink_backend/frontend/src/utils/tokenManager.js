@@ -72,8 +72,8 @@ class TokenManager {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: 'testuser@mechlink.com',
-          password: 'TestPassword123!'
+          email: localStorage.getItem('user_email') || 'testuser@mechlink.com',
+          password: localStorage.getItem('user_password') || 'TestPassword123!'
         }),
       });
 
