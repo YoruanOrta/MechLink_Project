@@ -101,7 +101,7 @@ mechlink/
 
 ## 👥 Team
 
-- **Yoruan Orta Bonilla**: Backend Developer.
+- **Yoruan Orta**: Backend Developer.
 - **Emanuel Mendoza**: Frontend Developer.
 
 ---
